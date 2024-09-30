@@ -37,3 +37,24 @@ body, html {
 .text-indigo-600:hover {
     color: #4f46e5;
 }
+
+/* New styles for the header */
+header {
+    transition: all 0.3s ease;
+}
+
+header:hover {
+    background-color: #f3f4f6;
+}
+
+header select {
+    transition: all 0.3s ease;
+}
+
+header select:hover {
+    border-color: #6366f1;
+}
+
+.group:hover .group-hover\:opacity-100 {
+    z-index: 10;
+}
