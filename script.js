@@ -37,7 +37,17 @@ require(["vs/editor/editor.main"], function () {
         language: "mermaid",
         theme: "vs-light",
         minimap: { enabled: false },
+        automaticLayout: true,
     });
+
+    // Adjust editor height to leave space for the documentation link
+    const editorContainer = document.getElementById("mermaidInput");
+    const adjustEditorHeight = () => {
+        const containerHeight = editorContainer.clientHeight;
+        editor.layout({ width: editorContainer.clientWidth, height: containerHeight - 30 });
+    };
+    adjustEditorHeight();
+    window.addEventListener('resize', adjustEditorHeight);
 
     editor.onDidChangeModelContent(renderChart);
     renderChart();
