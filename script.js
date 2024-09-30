@@ -96,7 +96,7 @@ function renderChart() {
             // Initialize pan and zoom after the SVG is rendered
             const panZoom = svgPanZoom("#mermaid-diagram", {
                 zoomEnabled: true,
-                controlIconsEnabled: true,
+                controlIconsEnabled: false,
                 fit: true,
                 center: true,
                 minZoom: 0.1,
