@@ -44,15 +44,15 @@ async function loadStateFromURL() {
     return null;
 }
 
-let initialState = null;
-
 require.config({
     paths: {
         vs: "https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.30.1/min/vs",
     },
 });
 
-require(["vs/editor/editor.main"], function () {
+require(["vs/editor/editor.main"], async function () {
+    initialState = await loadStateFromURL();
+
     const initialCode = initialState ? initialState.code : `graph TD
     A[Christmas] -->|Get money| B(Go shopping)
     B --> C{Let me think}
