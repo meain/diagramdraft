@@ -1,4 +1,5 @@
 let editor;
+let currentTheme = 'default';
 
 require.config({ paths: { vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.30.1/min/vs' } });
 
@@ -17,6 +18,12 @@ require(['vs/editor/editor.main'], function () {
 
     editor.onDidChangeModelContent(renderChart);
     renderChart();
+
+    // Add event listener for theme select
+    document.getElementById('themeSelect').addEventListener('change', function(e) {
+        currentTheme = e.target.value;
+        renderChart();
+    });
 });
 
 function renderChart() {
@@ -26,8 +33,11 @@ function renderChart() {
     // Clear previous chart
     output.innerHTML = '';
 
-    // Initialize mermaid
-    mermaid.initialize({ startOnLoad: false });
+    // Initialize mermaid with the current theme
+    mermaid.initialize({ 
+        startOnLoad: false,
+        theme: currentTheme
+    });
 
     // Render new chart
     mermaid.render('mermaid-diagram', input).then(result => {

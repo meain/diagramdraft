@@ -9,8 +9,18 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.30.1/min/vs/loader.min.js"></script>
   </head>
   <body class="bg-gray-100 h-screen flex flex-col">
-    <header class="bg-indigo-600 text-white py-4 px-6 shadow-md">
+    <header class="bg-indigo-600 text-white py-4 px-6 shadow-md flex justify-between items-center">
       <h1 class="text-2xl font-bold">Mermaid Chart Renderer</h1>
+      <div class="flex items-center">
+        <label for="themeSelect" class="mr-2">Chart Theme:</label>
+        <select id="themeSelect" class="bg-white text-indigo-600 rounded px-2 py-1">
+          <option value="default">Default</option>
+          <option value="neutral">Neutral</option>
+          <option value="dark">Dark</option>
+          <option value="forest">Forest</option>
+          <option value="base">Base</option>
+        </select>
+      </div>
     </header>
     <div class="flex-grow bg-white shadow overflow-hidden flex flex-col">
       <div class="px-2 py-3 sm:px-4 sm:py-5 flex-grow flex flex-col">
