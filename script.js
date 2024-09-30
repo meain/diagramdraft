@@ -1,5 +1,26 @@
+let editor;
+
+require.config({ paths: { vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.30.1/min/vs' } });
+
+require(['vs/editor/editor.main'], function () {
+    editor = monaco.editor.create(document.getElementById('mermaidInput'), {
+        value: `graph TD
+    A[Christmas] -->|Get money| B(Go shopping)
+    B --> C{Let me think}
+    C -->|One| D[Laptop]
+    C -->|Two| E[iPhone]
+    C -->|Three| F[fa:fa-car Car]`,
+        language: 'mermaid',
+        theme: 'vs-light',
+        minimap: { enabled: false }
+    });
+
+    editor.onDidChangeModelContent(renderChart);
+    renderChart();
+});
+
 function renderChart() {
-    const input = document.getElementById('mermaidInput').value;
+    const input = editor.getValue();
     const output = document.getElementById('mermaidChart');
 
     // Clear previous chart
@@ -15,9 +36,3 @@ function renderChart() {
         output.innerHTML = '<p style="color: red;">Error rendering chart: ' + error.message + '</p>';
     });
 }
-
-// Initial render
-renderChart();
-
-// Event listener for input changes
-document.getElementById('mermaidInput').addEventListener('input', renderChart);
