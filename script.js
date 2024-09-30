@@ -19,10 +19,10 @@ require(["vs/editor/editor.main"], function () {
                 [/[a-z][0-9A-Za-z]*/, "identifier"],
                 [/[{}()\[\]]/, "delimiter.bracket"],
                 [/".*?"/, "string"],
-                [/-->|==>|-.->/, "arrow"],
+                [/\-\->|\=\=>|\-\.\->/, "arrow"],
                 [/\|.*?\|/, "label"],
                 [/#.*$/, "comment"],
-            ]
+            ],
         }
     });
 
