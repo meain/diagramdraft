@@ -44,13 +44,11 @@ function renderChart() {
     mermaid.initialize({ 
         startOnLoad: false,
         theme: currentTheme,
+        look: currentLook,
         themeVariables: {
             fontFamily: currentLook === 'handDrawn' ? 'Comic Sans MS' : 'Arial',
             fontSize: currentLook === 'handDrawn' ? '16px' : '14px'
         },
-        flowchart: {
-            curve: currentLook === 'neo' ? 'basis' : 'linear'
-        }
     });
 
     // Render new chart
