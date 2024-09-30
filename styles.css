@@ -54,7 +54,3 @@ header select {
 header select:hover {
     border-color: #6366f1;
 }
-
-.group:hover .group-hover\:opacity-100 {
-    z-index: 10;
-}
