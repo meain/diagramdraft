@@ -14,7 +14,6 @@ function encodeState() {
 function decodeState(encodedState) {
     try {
         const decodedState = atob(decodeURIComponent(encodedState));
-        console.log("script.js:17 decodedState:", decodedState)
         return JSON.parse(decodedState);
     } catch (e) {
         console.error("Failed to decode state:", e);
@@ -30,7 +29,6 @@ function updateURL() {
 function loadStateFromURL() {
     const urlParams = new URLSearchParams(window.location.search);
     const encodedState = urlParams.get('state');
-    console.log("script.js:33 encodedState:", encodedState)
     if (encodedState) {
         const state = decodeState(encodedState);
         if (state) {
@@ -41,7 +39,6 @@ function loadStateFromURL() {
 }
 
 let initialState = loadStateFromURL();
-console.log("script.js:41 initialState:", initialState)
 
 require.config({
     paths: {
