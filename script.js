@@ -18,3 +18,6 @@ function renderChart() {
 
 // Initial render
 renderChart();
+
+// Event listener for input changes
+document.getElementById('mermaidInput').addEventListener('input', renderChart);
