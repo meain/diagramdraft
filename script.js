@@ -8,12 +8,12 @@ function encodeState() {
         theme: currentTheme,
         look: currentLook
     };
-    return btoa(JSON.stringify(state));
+    return encodeURIComponent(btoa(JSON.stringify(state)));
 }
 
 function decodeState(encodedState) {
     try {
-        const decodedState = atob(encodedState);
+        const decodedState = atob(decodeURIComponent(encodedState));
         console.log("script.js:17 decodedState:", decodedState)
         return JSON.parse(decodedState);
     } catch (e) {
