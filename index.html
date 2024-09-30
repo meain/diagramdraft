@@ -11,8 +11,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.30.1/min/vs/loader.min.js"></script>
   </head>
   <body class="bg-gray-100 h-screen flex flex-col">
-    <header class="bg-gray-100 text-gray-800 py-2 px-6 shadow-sm border-b border-gray-200">
-      <div class="container mx-auto flex justify-between items-center">
+    <header
+      class="bg-gray-100 text-gray-800 py-2 px-6 shadow-sm border-b border-gray-200"
+    >
+      <div class="flex justify-between items-center">
         <div class="flex items-center space-x-2">
           <h1 class="text-xl font-semibold tracking-tight">DiagramDraft</h1>
         </div>
@@ -40,10 +42,24 @@
               <option value="handDrawn">Hand Drawn</option>
             </select>
           </div>
-          <button id="exportBtn" class="bg-indigo-500 text-white px-4 py-2 rounded-md text-sm font-medium transition duration-300 ease-in-out hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:ring-offset-2 shadow-md hover:shadow-lg">
+          <button
+            id="exportBtn"
+            class="bg-indigo-500 text-white px-4 py-2 rounded-md text-sm font-medium transition duration-300 ease-in-out hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:ring-offset-2 shadow-md hover:shadow-lg"
+          >
             <span class="flex items-center">
-              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+              <svg
+                class="w-4 h-4 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
+                ></path>
               </svg>
               Export Chart
             </span>
@@ -54,23 +70,38 @@
     <div class="flex-grow bg-white shadow overflow-hidden flex flex-col">
       <div class="px-2 py-3 sm:px-4 sm:py-5 flex-grow flex flex-col">
         <div id="resizable-container" class="flex flex-grow">
-          <div id="code-section" class="flex flex-col" style="width: 33%;">
+          <div id="code-section" class="flex flex-col" style="width: 33%">
             <div class="flex flex-col h-full">
               <div
                 id="mermaidInput"
                 class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md flex-grow"
               ></div>
               <div class="mt-2 text-sm bg-indigo-50 p-2 rounded-md shadow-sm">
-                <a href="https://mermaid.js.org/intro/" target="_blank" rel="noopener noreferrer" class="text-indigo-600 hover:text-indigo-800 flex items-center">
-                  <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"></path>
+                <a
+                  href="https://mermaid.js.org/intro/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-indigo-600 hover:text-indigo-800 flex items-center"
+                >
+                  <svg
+                    class="w-4 h-4 mr-1"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"
+                    ></path>
                   </svg>
                   Mermaid Syntax Documentation
                 </a>
               </div>
             </div>
           </div>
-          <div id="resize-handle" class="cursor-col-resize w-1 bg-gray-300 hover:bg-gray-400 transition-colors"></div>
+          <div
+            id="resize-handle"
+            class="cursor-col-resize w-1 bg-gray-300 hover:bg-gray-400 transition-colors mx-2 px-1 rounded-full"
+          ></div>
           <div id="diagram-section" class="flex flex-col flex-grow">
             <div
               id="mermaidChart"
