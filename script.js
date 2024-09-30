@@ -65,10 +65,11 @@ function renderChart() {
         .then((result) => {
             output.innerHTML = result.svg;
 
-            // Ensure the SVG fills its container
+            // Ensure the SVG fills its container without max-width
             const svg = output.querySelector('svg');
             svg.setAttribute('width', '100%');
             svg.setAttribute('height', '100%');
+            svg.style.maxWidth = 'none';
 
             // Initialize pan and zoom after the SVG is rendered
             const panZoom = svgPanZoom("#mermaid-diagram", {
