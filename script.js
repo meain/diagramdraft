@@ -56,27 +56,30 @@ function renderChart() {
         output.innerHTML = result.svg;
         
         // Initialize pan and zoom after the SVG is rendered
-        svgPanZoom('#mermaid-diagram', {
-            zoomEnabled: true,
-            controlIconsEnabled: true,
-            fit: true,
-            center: true,
-            minZoom: 0.1
-        });
+        if (typeof svgPanZoom === 'function') {
+            const panZoom = svgPanZoom('#mermaid-diagram', {
+                zoomEnabled: true,
+                controlIconsEnabled: true,
+                fit: true,
+                center: true,
+                minZoom: 0.1
+            });
+
+            // Function to update pan and zoom when window is resized
+            function updatePanZoom() {
+                if (panZoom) {
+                    panZoom.resize();
+                    panZoom.fit();
+                    panZoom.center();
+                }
+            }
+
+            // Add event listener for window resize
+            window.addEventListener('resize', updatePanZoom);
+        } else {
+            console.warn('svg-pan-zoom library not loaded. Pan and zoom functionality will not be available.');
+        }
     }).catch(error => {
         output.innerHTML = '<p style="color: red;">Error rendering chart: ' + error.message + '</p>';
     });
 }
-
-// Function to update pan and zoom when window is resized
-function updatePanZoom() {
-    const panZoomInstance = svgPanZoom('#mermaid-diagram');
-    if (panZoomInstance) {
-        panZoomInstance.resize();
-        panZoomInstance.fit();
-        panZoomInstance.center();
-    }
-}
-
-// Add event listener for window resize
-window.addEventListener('resize', updatePanZoom);
