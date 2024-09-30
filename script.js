@@ -54,7 +54,29 @@ function renderChart() {
     // Render new chart
     mermaid.render('mermaid-diagram', input).then(result => {
         output.innerHTML = result.svg;
+        
+        // Initialize pan and zoom after the SVG is rendered
+        svgPanZoom('#mermaid-diagram', {
+            zoomEnabled: true,
+            controlIconsEnabled: true,
+            fit: true,
+            center: true,
+            minZoom: 0.1
+        });
     }).catch(error => {
         output.innerHTML = '<p style="color: red;">Error rendering chart: ' + error.message + '</p>';
     });
 }
+
+// Function to update pan and zoom when window is resized
+function updatePanZoom() {
+    const panZoomInstance = svgPanZoom('#mermaid-diagram');
+    if (panZoomInstance) {
+        panZoomInstance.resize();
+        panZoomInstance.fit();
+        panZoomInstance.center();
+    }
+}
+
+// Add event listener for window resize
+window.addEventListener('resize', updatePanZoom);
