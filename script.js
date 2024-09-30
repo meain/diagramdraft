@@ -11,20 +11,16 @@ function encodeState() {
         },
     };
     const jsonString = JSON.stringify(state);
-    const compressed = pako.deflate(jsonString, { to: 'string' });
-    return btoa(compressed);
+    const compressed = pako.deflate(jsonString, { to: "string" });
+    return encodeURIComponent(btoa(compressed));
 }
 
 function decodeState(encodedState) {
     try {
-        const compressed = atob(encodedState);
+        const decoded = decodeURIComponent(encodedState);
+        const compressed = atob(decoded);
         let jsonString;
-        try {
-            jsonString = pako.inflate(compressed, { to: 'string' });
-        } catch (inflateError) {
-            console.warn("Failed to inflate state, trying to parse as JSON:", inflateError);
-            jsonString = compressed;
-        }
+        jsonString = pako.inflate(compressed, { to: "string" });
         return JSON.parse(jsonString);
     } catch (e) {
         console.error("Failed to decode state:", e);
