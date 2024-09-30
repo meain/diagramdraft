@@ -31,14 +31,13 @@ function loadStateFromURL() {
     if (encodedState) {
         const state = decodeState(encodedState);
         if (state) {
-            editor.setValue(state.code);
-            currentTheme = state.theme;
-            currentLook = state.look;
-            document.getElementById("themeSelect").value = currentTheme;
-            document.getElementById("lookSelect").value = currentLook;
+            return state;
         }
     }
+    return null;
 }
+
+let initialState = loadStateFromURL();
 
 require.config({
     paths: {
@@ -47,6 +46,19 @@ require.config({
 });
 
 require(["vs/editor/editor.main"], function () {
+    const initialCode = initialState ? initialState.code : `graph TD
+    A[Christmas] -->|Get money| B(Go shopping)
+    B --> C{Let me think}
+    C -->|One| D[Laptop]
+    C -->|Two| E[iPhone]
+    C -->|Three| F[fa:fa-car Car]`;
+
+    if (initialState) {
+        currentTheme = initialState.theme;
+        currentLook = initialState.look;
+        document.getElementById("themeSelect").value = currentTheme;
+        document.getElementById("lookSelect").value = currentLook;
+    }
     // Define custom language for Mermaid
     monaco.languages.register({ id: 'mermaid' });
     monaco.languages.setMonarchTokensProvider('mermaid', {
@@ -66,12 +78,7 @@ require(["vs/editor/editor.main"], function () {
 
     // Create editor with Mermaid language
     editor = monaco.editor.create(document.getElementById("mermaidInput"), {
-        value: `graph TD
-    A[Christmas] -->|Get money| B(Go shopping)
-    B --> C{Let me think}
-    C -->|One| D[Laptop]
-    C -->|Two| E[iPhone]
-    C -->|Three| F[fa:fa-car Car]`,
+        value: initialCode,
         language: "mermaid",
         theme: "vs-light",
         minimap: { enabled: false },
@@ -92,7 +99,6 @@ require(["vs/editor/editor.main"], function () {
         updateURL();
     });
     
-    loadStateFromURL();
     renderChart();
 
     // Add event listener for window resize
