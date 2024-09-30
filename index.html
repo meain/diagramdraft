@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mermaid Chart Renderer</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="input-section">
+            <h2>Mermaid Code</h2>
+            <textarea id="mermaidInput" rows="20" cols="50">graph TD
+    A[Christmas] -->|Get money| B(Go shopping)
+    B --> C{Let me think}
+    C -->|One| D[Laptop]
+    C -->|Two| E[iPhone]
+    C -->|Three| F[fa:fa-car Car]</textarea>
+            <button onclick="renderChart()">Render Chart</button>
+        </div>
+        <div class="output-section">
+            <h2>Rendered Chart</h2>
+            <div id="mermaidChart"></div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
