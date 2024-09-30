@@ -42,6 +42,11 @@ require(["vs/editor/editor.main"], function () {
     editor.onDidChangeModelContent(renderChart);
     renderChart();
 
+    // Add event listener for window resize
+    window.addEventListener('resize', function() {
+        editor.layout();
+    });
+
     // Add event listener for theme select
     document
         .getElementById("themeSelect")
