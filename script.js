@@ -11,7 +11,7 @@ function encodeState() {
         },
     };
     const jsonString = JSON.stringify(state);
-    const compressed = pako.deflate(jsonString, { to: "string" });
+    const compressed = pako.deflate(jsonString);
     return encodeURIComponent(btoa(compressed));
 }
 
@@ -19,15 +19,14 @@ function decodeState(encodedState) {
     try {
         const decoded = decodeURIComponent(encodedState);
         const compressed = atob(decoded);
-        let jsonString;
-        jsonString = pako.inflate(compressed, { to: "string" });
-        return JSON.parse(jsonString);
+        const compressedArray = new Uint8Array(compressed.split(',').map(Number));
+        const jsonString = pako.inflate(compressedArray);
+        return JSON.parse(new TextDecoder().decode(jsonString));
     } catch (e) {
         console.error("Failed to decode state:", e);
         return null;
     }
 }
-
 function updateURL() {
     const encodedState = encodeState();
     history.replaceState(null, null, `?state=${encodedState}`);
@@ -61,8 +60,8 @@ require(["vs/editor/editor.main"], async function () {
     C -->|Three| F[fa:fa-car Car]`;
 
     if (initialState) {
-        currentTheme = initialState.theme;
-        currentLook = initialState.look;
+        currentTheme = initialState.mermaid.theme;
+        currentLook = initialState.mermaid.look;
         document.getElementById("themeSelect").value = currentTheme;
         document.getElementById("lookSelect").value = currentLook;
     }
@@ -145,8 +144,8 @@ require(["vs/editor/editor.main"], async function () {
         initialState = await loadStateFromURL();
         if (initialState) {
             editor.setValue(initialState.code);
-            currentTheme = initialState.theme;
-            currentLook = initialState.look;
+            currentTheme = initialState.mermaid.theme;
+            currentLook = initialState.mermaid.look;
             document.getElementById("themeSelect").value = currentTheme;
             document.getElementById("lookSelect").value = currentLook;
             renderChart();
