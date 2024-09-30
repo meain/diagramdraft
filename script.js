@@ -105,7 +105,7 @@ require(["vs/editor/editor.main"], async function () {
         renderChart();
         await updateURL();
     });
-    
+
     renderChart();
 
     // Add event listener for window resize
