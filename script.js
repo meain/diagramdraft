@@ -53,11 +53,16 @@ require(["vs/editor/editor.main"], async function () {
     const initialCode = initialState
         ? initialState.code
         : `graph TD
-    A[Christmas] -->|Get money| B(Go shopping)
-    B --> C{Let me think}
-    C -->|One| D[Laptop]
-    C -->|Two| E[iPhone]
-    C -->|Three| F[fa:fa-car Car]`;
+    A[Start] -->|Decide to make a Mermaid chart| B(Stare at blank screen)
+    B --> C{What now?}
+    C -->|Panic| D[Google 'How to Mermaid']
+    C -->|Procrastinate| E[Check social media]
+    C -->|Be brave| F[Type random symbols]
+    D --> G[Copy-paste examples]
+    E --> G
+    F -->|Accidentally create modern art| G
+    G -->|Finally| H[Admire your 'chart']
+    H -->|Realize it makes no sense| A`;
 
     if (initialState) {
         currentTheme = initialState.mermaid.theme;
