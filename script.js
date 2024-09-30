@@ -2,8 +2,7 @@ let editor;
 let currentTheme = "default";
 let currentLook = "classic";
 
-async function encodeState() {
-    // Make this similar to mermaid.live
+function encodeState() {
     const state = {
         code: editor.getValue(),
         mermaid: {
@@ -11,38 +10,32 @@ async function encodeState() {
             look: currentLook,
         },
     };
-    const zip = new JSZip();
-    zip.file("state.json", JSON.stringify(state));
-    const content = await zip.generateAsync({ type: "base64" });
-    return encodeURIComponent(content);
+    const jsonString = JSON.stringify(state);
+    const compressed = pako.deflate(jsonString, { to: 'string' });
+    return btoa(compressed);
 }
 
-async function decodeState(encodedState) {
+function decodeState(encodedState) {
     try {
-        const content = decodeURIComponent(encodedState);
-        const zip = new JSZip();
-        await zip.loadAsync(content, { base64: true });
-        const stateJson = await zip.file("state.json").async("string");
-        return JSON.parse(stateJson);
+        const compressed = atob(encodedState);
+        const jsonString = pako.inflate(compressed, { to: 'string' });
+        return JSON.parse(jsonString);
     } catch (e) {
         console.error("Failed to decode state:", e);
         return null;
     }
 }
 
-async function updateURL() {
-    const encodedState = await encodeState();
+function updateURL() {
+    const encodedState = encodeState();
     history.replaceState(null, null, `?state=${encodedState}`);
 }
 
-async function loadStateFromURL() {
+function loadStateFromURL() {
     const urlParams = new URLSearchParams(window.location.search);
     const encodedState = urlParams.get("state");
     if (encodedState) {
-        const state = await decodeState(encodedState);
-        if (state) {
-            return state;
-        }
+        return decodeState(encodedState);
     }
     return null;
 }
