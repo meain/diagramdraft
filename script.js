@@ -39,7 +39,29 @@ require(["vs/editor/editor.main"], function () {
             currentLook = e.target.value;
             renderChart();
         });
+
+    // Add event listener for export button
+    document
+        .getElementById("exportBtn")
+        .addEventListener("click", exportChart);
 });
+
+function exportChart() {
+    const svgElement = document.querySelector("#mermaidChart svg");
+    if (svgElement) {
+        const svgData = new XMLSerializer().serializeToString(svgElement);
+        const svgBlob = new Blob([svgData], {type: "image/svg+xml;charset=utf-8"});
+        const svgUrl = URL.createObjectURL(svgBlob);
+        const downloadLink = document.createElement("a");
+        downloadLink.href = svgUrl;
+        downloadLink.download = "mermaid_chart.svg";
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+    } else {
+        alert("No chart to export. Please render a chart first.");
+    }
+}
 
 function renderChart() {
     const input = editor.getValue();
