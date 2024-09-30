@@ -54,8 +54,8 @@
     </header>
     <div class="flex-grow bg-white shadow overflow-hidden flex flex-col">
       <div class="px-2 py-3 sm:px-4 sm:py-5 flex-grow flex flex-col">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-grow">
-          <div class="flex flex-col">
+        <div id="resizable-container" class="flex flex-grow">
+          <div id="code-section" class="flex flex-col" style="width: 33%;">
             <div class="flex flex-col h-full">
               <div
                 id="mermaidInput"
@@ -71,7 +71,8 @@
               </div>
             </div>
           </div>
-          <div class="col-span-2 flex flex-col">
+          <div id="resize-handle" class="cursor-col-resize w-1 bg-gray-300 hover:bg-gray-400 transition-colors"></div>
+          <div id="diagram-section" class="flex flex-col flex-grow">
             <div
               id="mermaidChart"
               class="border border-gray-300 rounded-md p-4 bg-white flex-grow overflow-auto"

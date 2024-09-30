@@ -30,6 +30,26 @@ body, html {
     background-color: #e0e7ff;
 }
 
+#resize-handle {
+    cursor: col-resize;
+    width: 4px;
+    background-color: #e5e7eb;
+    transition: background-color 0.3s ease;
+}
+
+#resize-handle:hover {
+    background-color: #d1d5db;
+}
+
+#resizable-container {
+    display: flex;
+    height: 100%;
+}
+
+#code-section, #diagram-section {
+    overflow: hidden;
+}
+
 .text-indigo-600 {
     transition: color 0.3s ease;
 }

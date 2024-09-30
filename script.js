@@ -123,6 +123,7 @@ require(["vs/editor/editor.main"], async function () {
     // Add event listener for window resize
     window.addEventListener("resize", function () {
         editor.layout();
+        updatePanZoom();
     });
 
     // Add event listener for theme select
@@ -158,6 +159,35 @@ require(["vs/editor/editor.main"], async function () {
             renderChart();
         }
     });
+
+    // Add resizing functionality
+    const resizeHandle = document.getElementById('resize-handle');
+    const codeSection = document.getElementById('code-section');
+    const diagramSection = document.getElementById('diagram-section');
+    let isResizing = false;
+
+    resizeHandle.addEventListener('mousedown', (e) => {
+        isResizing = true;
+        document.addEventListener('mousemove', handleMouseMove);
+        document.addEventListener('mouseup', () => {
+            isResizing = false;
+            document.removeEventListener('mousemove', handleMouseMove);
+        });
+    });
+
+    function handleMouseMove(e) {
+        if (!isResizing) return;
+        const containerRect = document.getElementById('resizable-container').getBoundingClientRect();
+        const newCodeWidth = e.clientX - containerRect.left;
+        const containerWidth = containerRect.width;
+        const codeWidthPercentage = (newCodeWidth / containerWidth) * 100;
+        
+        if (codeWidthPercentage > 20 && codeWidthPercentage < 80) {
+            codeSection.style.width = `${codeWidthPercentage}%`;
+            editor.layout();
+            updatePanZoom();
+        }
+    }
 });
 
 function exportChart() {
