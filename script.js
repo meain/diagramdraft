@@ -77,7 +77,7 @@ function exportChart() {
         downloadLink.click();
         document.body.removeChild(downloadLink);
     } else {
-        alert("No chart to export. Please render a chart first.");
+        alert("No diagram to export. Please render a diagram first.");
     }
 }
 
