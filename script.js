@@ -1,6 +1,6 @@
 let editor;
 let currentTheme = "default";
-let currentLook = "classic";
+let currentLook = "handDrawn";
 
 function encodeState() {
     const state = {
@@ -67,9 +67,11 @@ require(["vs/editor/editor.main"], async function () {
     if (initialState) {
         currentTheme = initialState.mermaid.theme;
         currentLook = initialState.mermaid.look;
-        document.getElementById("themeSelect").value = currentTheme;
-        document.getElementById("lookSelect").value = currentLook;
+    } else {
+        currentLook = "handDrawn";
     }
+    document.getElementById("themeSelect").value = currentTheme;
+    document.getElementById("lookSelect").value = currentLook;
     // Define custom language for Mermaid
     monaco.languages.register({ id: "mermaid" });
     monaco.languages.setMonarchTokensProvider("mermaid", {
