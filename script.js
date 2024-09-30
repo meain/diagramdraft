@@ -215,6 +215,7 @@ function renderChart() {
                 center: true,
                 minZoom: 0.1,
                 maxZoom: 10,
+                zoomScaleSensitivity: 0.3, // Decreased from default 0.1 to make zoom faster
             });
 
             // Function to update pan and zoom when window is resized
