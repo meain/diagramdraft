@@ -21,3 +21,19 @@ body, html {
     width: 100%;
     height: 100%;
 }
+
+.bg-indigo-50 {
+    transition: background-color 0.3s ease;
+}
+
+.bg-indigo-50:hover {
+    background-color: #e0e7ff;
+}
+
+.text-indigo-600 {
+    transition: color 0.3s ease;
+}
+
+.text-indigo-600:hover {
+    color: #4f46e5;
+}
