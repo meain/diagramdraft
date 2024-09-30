@@ -9,6 +9,24 @@ require.config({
 });
 
 require(["vs/editor/editor.main"], function () {
+    // Define custom language for Mermaid
+    monaco.languages.register({ id: 'mermaid' });
+    monaco.languages.setMonarchTokensProvider('mermaid', {
+        tokenizer: {
+            root: [
+                [/^(graph|flowchart|sequenceDiagram|classDiagram|stateDiagram|erDiagram|gantt|pie|journey)/, "keyword"],
+                [/[A-Z][0-9A-Za-z]*/, "type.identifier"],
+                [/[a-z][0-9A-Za-z]*/, "identifier"],
+                [/[{}()\[\]]/, "delimiter.bracket"],
+                [/".*?"/, "string"],
+                [/-->|==>|-.->/, "arrow"],
+                [/\|.*?\|/, "label"],
+                [/#.*$/, "comment"],
+            ]
+        }
+    });
+
+    // Create editor with Mermaid language
     editor = monaco.editor.create(document.getElementById("mermaidInput"), {
         value: `graph TD
     A[Christmas] -->|Get money| B(Go shopping)
