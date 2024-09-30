@@ -1,5 +1,6 @@
 let editor;
 let currentTheme = 'default';
+let currentLook = 'classic';
 
 require.config({ paths: { vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.30.1/min/vs' } });
 
@@ -24,6 +25,12 @@ require(['vs/editor/editor.main'], function () {
         currentTheme = e.target.value;
         renderChart();
     });
+
+    // Add event listener for look select
+    document.getElementById('lookSelect').addEventListener('change', function(e) {
+        currentLook = e.target.value;
+        renderChart();
+    });
 });
 
 function renderChart() {
@@ -33,10 +40,17 @@ function renderChart() {
     // Clear previous chart
     output.innerHTML = '';
 
-    // Initialize mermaid with the current theme
+    // Initialize mermaid with the current theme and look
     mermaid.initialize({ 
         startOnLoad: false,
-        theme: currentTheme
+        theme: currentTheme,
+        themeVariables: {
+            fontFamily: currentLook === 'handDrawn' ? 'Comic Sans MS' : 'Arial',
+            fontSize: currentLook === 'handDrawn' ? '16px' : '14px'
+        },
+        flowchart: {
+            curve: currentLook === 'neo' ? 'basis' : 'linear'
+        }
     });
 
     // Render new chart
