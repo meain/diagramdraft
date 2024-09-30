@@ -2,35 +2,41 @@ let editor;
 let currentTheme = "default";
 let currentLook = "classic";
 
-function encodeState() {
+async function encodeState() {
     const state = {
         code: editor.getValue(),
         theme: currentTheme,
         look: currentLook
     };
-    return encodeURIComponent(btoa(JSON.stringify(state)));
+    const zip = new JSZip();
+    zip.file("state.json", JSON.stringify(state));
+    const content = await zip.generateAsync({type: "base64"});
+    return encodeURIComponent(content);
 }
 
-function decodeState(encodedState) {
+async function decodeState(encodedState) {
     try {
-        const decodedState = atob(decodeURIComponent(encodedState));
-        return JSON.parse(decodedState);
+        const content = decodeURIComponent(encodedState);
+        const zip = new JSZip();
+        await zip.loadAsync(content, {base64: true});
+        const stateJson = await zip.file("state.json").async("string");
+        return JSON.parse(stateJson);
     } catch (e) {
         console.error("Failed to decode state:", e);
         return null;
     }
 }
 
-function updateURL() {
-    const encodedState = encodeState();
+async function updateURL() {
+    const encodedState = await encodeState();
     history.replaceState(null, null, `?state=${encodedState}`);
 }
 
-function loadStateFromURL() {
+async function loadStateFromURL() {
     const urlParams = new URLSearchParams(window.location.search);
     const encodedState = urlParams.get('state');
     if (encodedState) {
-        const state = decodeState(encodedState);
+        const state = await decodeState(encodedState);
         if (state) {
             return state;
         }
@@ -38,7 +44,7 @@ function loadStateFromURL() {
     return null;
 }
 
-let initialState = loadStateFromURL();
+let initialState = null;
 
 require.config({
     paths: {
@@ -95,9 +101,9 @@ require(["vs/editor/editor.main"], function () {
     adjustEditorHeight();
     window.addEventListener('resize', adjustEditorHeight);
 
-    editor.onDidChangeModelContent(() => {
+    editor.onDidChangeModelContent(async () => {
         renderChart();
-        updateURL();
+        await updateURL();
     });
     
     renderChart();
@@ -110,19 +116,19 @@ require(["vs/editor/editor.main"], function () {
     // Add event listener for theme select
     document
         .getElementById("themeSelect")
-        .addEventListener("change", function (e) {
+        .addEventListener("change", async function (e) {
             currentTheme = e.target.value;
             renderChart();
-            updateURL();
+            await updateURL();
         });
 
     // Add event listener for look select
     document
         .getElementById("lookSelect")
-        .addEventListener("change", function (e) {
+        .addEventListener("change", async function (e) {
             currentLook = e.target.value;
             renderChart();
-            updateURL();
+            await updateURL();
         });
 
     // Add event listener for export button
@@ -131,7 +137,17 @@ require(["vs/editor/editor.main"], function () {
         .addEventListener("click", exportChart);
 
     // Add event listener for popstate to handle browser back/forward
-    window.addEventListener('popstate', loadStateFromURL);
+    window.addEventListener('popstate', async () => {
+        initialState = await loadStateFromURL();
+        if (initialState) {
+            editor.setValue(initialState.code);
+            currentTheme = initialState.theme;
+            currentLook = initialState.look;
+            document.getElementById("themeSelect").value = currentTheme;
+            document.getElementById("lookSelect").value = currentLook;
+            renderChart();
+        }
+    });
 });
 
 function exportChart() {
