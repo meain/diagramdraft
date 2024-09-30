@@ -2,6 +2,44 @@ let editor;
 let currentTheme = "default";
 let currentLook = "classic";
 
+function encodeState() {
+    const state = {
+        code: editor.getValue(),
+        theme: currentTheme,
+        look: currentLook
+    };
+    return btoa(JSON.stringify(state));
+}
+
+function decodeState(encodedState) {
+    try {
+        return JSON.parse(atob(encodedState));
+    } catch (e) {
+        console.error("Failed to decode state:", e);
+        return null;
+    }
+}
+
+function updateURL() {
+    const encodedState = encodeState();
+    history.replaceState(null, null, `?state=${encodedState}`);
+}
+
+function loadStateFromURL() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const encodedState = urlParams.get('state');
+    if (encodedState) {
+        const state = decodeState(encodedState);
+        if (state) {
+            editor.setValue(state.code);
+            currentTheme = state.theme;
+            currentLook = state.look;
+            document.getElementById("themeSelect").value = currentTheme;
+            document.getElementById("lookSelect").value = currentLook;
+        }
+    }
+}
+
 require.config({
     paths: {
         vs: "https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.30.1/min/vs",
@@ -49,7 +87,12 @@ require(["vs/editor/editor.main"], function () {
     adjustEditorHeight();
     window.addEventListener('resize', adjustEditorHeight);
 
-    editor.onDidChangeModelContent(renderChart);
+    editor.onDidChangeModelContent(() => {
+        renderChart();
+        updateURL();
+    });
+    
+    loadStateFromURL();
     renderChart();
 
     // Add event listener for window resize
@@ -63,6 +106,7 @@ require(["vs/editor/editor.main"], function () {
         .addEventListener("change", function (e) {
             currentTheme = e.target.value;
             renderChart();
+            updateURL();
         });
 
     // Add event listener for look select
@@ -71,12 +115,16 @@ require(["vs/editor/editor.main"], function () {
         .addEventListener("change", function (e) {
             currentLook = e.target.value;
             renderChart();
+            updateURL();
         });
 
     // Add event listener for export button
     document
         .getElementById("exportBtn")
         .addEventListener("click", exportChart);
+
+    // Add event listener for popstate to handle browser back/forward
+    window.addEventListener('popstate', loadStateFromURL);
 });
 
 function exportChart() {
