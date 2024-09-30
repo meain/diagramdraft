@@ -8,28 +8,26 @@
     <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.30.1/min/vs/loader.min.js"></script>
   </head>
-  <body class="bg-gray-100 min-h-screen py-4">
-    <div class="w-full">
-      <h1 class="text-3xl font-bold text-center text-gray-900 mb-4">
-        Mermaid Chart Renderer
-      </h1>
-      <div class="bg-white shadow overflow-hidden">
-        <div class="px-2 py-3 sm:px-4 sm:py-5">
-          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div class="space-y-4">
-              <h2 class="text-lg font-medium text-gray-900">Mermaid Code</h2>
-              <div
-                id="mermaidInput"
-                class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md h-96"
-              ></div>
-            </div>
-            <div class="col-span-2 space-y-4">
-              <h2 class="text-lg font-medium text-gray-900">Rendered Chart</h2>
-              <div
-                id="mermaidChart"
-                class="border border-gray-300 rounded-md p-4 bg-white h-full"
-              ></div>
-            </div>
+  <body class="bg-gray-100 h-screen flex flex-col">
+    <h1 class="text-3xl font-bold text-center text-gray-900 py-4">
+      Mermaid Chart Renderer
+    </h1>
+    <div class="flex-grow bg-white shadow overflow-hidden flex flex-col">
+      <div class="px-2 py-3 sm:px-4 sm:py-5 flex-grow flex flex-col">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-grow">
+          <div class="flex flex-col">
+            <h2 class="text-lg font-medium text-gray-900 mb-4">Mermaid Code</h2>
+            <div
+              id="mermaidInput"
+              class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md flex-grow"
+            ></div>
+          </div>
+          <div class="col-span-2 flex flex-col">
+            <h2 class="text-lg font-medium text-gray-900 mb-4">Rendered Chart</h2>
+            <div
+              id="mermaidChart"
+              class="border border-gray-300 rounded-md p-4 bg-white flex-grow overflow-auto"
+            ></div>
           </div>
         </div>
       </div>
