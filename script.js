@@ -3,14 +3,17 @@ let currentTheme = "default";
 let currentLook = "classic";
 
 async function encodeState() {
+    // Make this similar to mermaid.live
     const state = {
         code: editor.getValue(),
-        theme: currentTheme,
-        look: currentLook
+        mermaid: {
+            theme: currentTheme,
+            look: currentLook,
+        },
     };
     const zip = new JSZip();
     zip.file("state.json", JSON.stringify(state));
-    const content = await zip.generateAsync({type: "base64"});
+    const content = await zip.generateAsync({ type: "base64" });
     return encodeURIComponent(content);
 }
 
@@ -18,7 +21,7 @@ async function decodeState(encodedState) {
     try {
         const content = decodeURIComponent(encodedState);
         const zip = new JSZip();
-        await zip.loadAsync(content, {base64: true});
+        await zip.loadAsync(content, { base64: true });
         const stateJson = await zip.file("state.json").async("string");
         return JSON.parse(stateJson);
     } catch (e) {
@@ -34,7 +37,7 @@ async function updateURL() {
 
 async function loadStateFromURL() {
     const urlParams = new URLSearchParams(window.location.search);
-    const encodedState = urlParams.get('state');
+    const encodedState = urlParams.get("state");
     if (encodedState) {
         const state = await decodeState(encodedState);
         if (state) {
@@ -53,7 +56,9 @@ require.config({
 require(["vs/editor/editor.main"], async function () {
     initialState = await loadStateFromURL();
 
-    const initialCode = initialState ? initialState.code : `graph TD
+    const initialCode = initialState
+        ? initialState.code
+        : `graph TD
     A[Christmas] -->|Get money| B(Go shopping)
     B --> C{Let me think}
     C -->|One| D[Laptop]
@@ -67,11 +72,14 @@ require(["vs/editor/editor.main"], async function () {
         document.getElementById("lookSelect").value = currentLook;
     }
     // Define custom language for Mermaid
-    monaco.languages.register({ id: 'mermaid' });
-    monaco.languages.setMonarchTokensProvider('mermaid', {
+    monaco.languages.register({ id: "mermaid" });
+    monaco.languages.setMonarchTokensProvider("mermaid", {
         tokenizer: {
             root: [
-                [/^(graph|flowchart|sequenceDiagram|classDiagram|stateDiagram|erDiagram|gantt|pie|journey)/, "keyword"],
+                [
+                    /^(graph|flowchart|sequenceDiagram|classDiagram|stateDiagram|erDiagram|gantt|pie|journey)/,
+                    "keyword",
+                ],
                 [/[A-Z][0-9A-Za-z]*/, "type.identifier"],
                 [/[a-z][0-9A-Za-z]*/, "identifier"],
                 [/[{}()\[\]]/, "delimiter.bracket"],
@@ -80,7 +88,7 @@ require(["vs/editor/editor.main"], async function () {
                 [/\|.*?\|/, "label"],
                 [/#.*$/, "comment"],
             ],
-        }
+        },
     });
 
     // Create editor with Mermaid language
@@ -96,10 +104,13 @@ require(["vs/editor/editor.main"], async function () {
     const editorContainer = document.getElementById("mermaidInput");
     const adjustEditorHeight = () => {
         const containerHeight = editorContainer.clientHeight;
-        editor.layout({ width: editorContainer.clientWidth, height: containerHeight - 30 });
+        editor.layout({
+            width: editorContainer.clientWidth,
+            height: containerHeight - 30,
+        });
     };
     adjustEditorHeight();
-    window.addEventListener('resize', adjustEditorHeight);
+    window.addEventListener("resize", adjustEditorHeight);
 
     editor.onDidChangeModelContent(async () => {
         renderChart();
@@ -109,7 +120,7 @@ require(["vs/editor/editor.main"], async function () {
     renderChart();
 
     // Add event listener for window resize
-    window.addEventListener('resize', function() {
+    window.addEventListener("resize", function () {
         editor.layout();
     });
 
@@ -132,12 +143,10 @@ require(["vs/editor/editor.main"], async function () {
         });
 
     // Add event listener for export button
-    document
-        .getElementById("exportBtn")
-        .addEventListener("click", exportChart);
+    document.getElementById("exportBtn").addEventListener("click", exportChart);
 
     // Add event listener for popstate to handle browser back/forward
-    window.addEventListener('popstate', async () => {
+    window.addEventListener("popstate", async () => {
         initialState = await loadStateFromURL();
         if (initialState) {
             editor.setValue(initialState.code);
@@ -154,7 +163,9 @@ function exportChart() {
     const svgElement = document.querySelector("#mermaidChart svg");
     if (svgElement) {
         const svgData = new XMLSerializer().serializeToString(svgElement);
-        const svgBlob = new Blob([svgData], {type: "image/svg+xml;charset=utf-8"});
+        const svgBlob = new Blob([svgData], {
+            type: "image/svg+xml;charset=utf-8",
+        });
         const svgUrl = URL.createObjectURL(svgBlob);
         const downloadLink = document.createElement("a");
         downloadLink.href = svgUrl;
@@ -192,10 +203,10 @@ function renderChart() {
             output.innerHTML = result.svg;
 
             // Ensure the SVG fills its container without max-width
-            const svg = output.querySelector('svg');
-            svg.setAttribute('width', '100%');
-            svg.setAttribute('height', '100%');
-            svg.style.maxWidth = 'none';
+            const svg = output.querySelector("svg");
+            svg.setAttribute("width", "100%");
+            svg.setAttribute("height", "100%");
+            svg.style.maxWidth = "none";
 
             // Initialize pan and zoom after the SVG is rendered
             const panZoom = svgPanZoom("#mermaid-diagram", {
