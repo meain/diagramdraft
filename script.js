@@ -65,6 +65,11 @@ function renderChart() {
         .then((result) => {
             output.innerHTML = result.svg;
 
+            // Ensure the SVG fills its container
+            const svg = output.querySelector('svg');
+            svg.setAttribute('width', '100%');
+            svg.setAttribute('height', '100%');
+
             // Initialize pan and zoom after the SVG is rendered
             const panZoom = svgPanZoom("#mermaid-diagram", {
                 zoomEnabled: true,
@@ -72,6 +77,7 @@ function renderChart() {
                 fit: true,
                 center: true,
                 minZoom: 0.1,
+                maxZoom: 10,
             });
 
             // Function to update pan and zoom when window is resized
@@ -85,6 +91,9 @@ function renderChart() {
 
             // Add event listener for window resize
             window.addEventListener("resize", updatePanZoom);
+
+            // Initial update
+            updatePanZoom();
         })
         .catch((error) => {
             output.innerHTML =
