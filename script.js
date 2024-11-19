@@ -19,7 +19,9 @@ function decodeState(encodedState) {
     try {
         const decoded = decodeURIComponent(encodedState);
         const compressed = atob(decoded);
-        const compressedArray = new Uint8Array(compressed.split(',').map(Number));
+        const compressedArray = new Uint8Array(
+            compressed.split(",").map(Number),
+        );
         const jsonString = pako.inflate(compressedArray);
         return JSON.parse(new TextDecoder().decode(jsonString));
     } catch (e) {
@@ -29,6 +31,7 @@ function decodeState(encodedState) {
 }
 function updateURL() {
     const encodedState = encodeState();
+    localStorage.setItem("state", encodedState);
     history.replaceState(null, null, `?state=${encodedState}`);
 }
 
@@ -49,6 +52,13 @@ require.config({
 
 require(["vs/editor/editor.main"], async function () {
     initialState = await loadStateFromURL();
+
+    if (!initialState) {
+        const encodedState = localStorage.getItem("state");
+        if (encodedState) {
+            initialState = decodeState(encodedState);
+        }
+    }
 
     const initialCode = initialState
         ? initialState.code
@@ -161,27 +171,29 @@ require(["vs/editor/editor.main"], async function () {
     });
 
     // Add resizing functionality
-    const resizeHandle = document.getElementById('resize-handle');
-    const codeSection = document.getElementById('code-section');
-    const diagramSection = document.getElementById('diagram-section');
+    const resizeHandle = document.getElementById("resize-handle");
+    const codeSection = document.getElementById("code-section");
+    const diagramSection = document.getElementById("diagram-section");
     let isResizing = false;
 
-    resizeHandle.addEventListener('mousedown', (e) => {
+    resizeHandle.addEventListener("mousedown", (e) => {
         isResizing = true;
-        document.addEventListener('mousemove', handleMouseMove);
-        document.addEventListener('mouseup', () => {
+        document.addEventListener("mousemove", handleMouseMove);
+        document.addEventListener("mouseup", () => {
             isResizing = false;
-            document.removeEventListener('mousemove', handleMouseMove);
+            document.removeEventListener("mousemove", handleMouseMove);
         });
     });
 
     function handleMouseMove(e) {
         if (!isResizing) return;
-        const containerRect = document.getElementById('resizable-container').getBoundingClientRect();
+        const containerRect = document
+            .getElementById("resizable-container")
+            .getBoundingClientRect();
         const newCodeWidth = e.clientX - containerRect.left;
         const containerWidth = containerRect.width;
         const codeWidthPercentage = (newCodeWidth / containerWidth) * 100;
-        
+
         if (codeWidthPercentage > 20 && codeWidthPercentage < 80) {
             codeSection.style.width = `${codeWidthPercentage}%`;
             editor.layout();
