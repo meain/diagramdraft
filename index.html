@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>DiagramDraft</title>
+    <link rel="stylesheet" href="styles.css" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="svg-pan-zoom.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
@@ -102,10 +103,14 @@
             id="resize-handle"
             class="cursor-col-resize w-1 bg-gray-300 hover:bg-gray-400 transition-colors mx-2 px-1 rounded-full"
           ></div>
-          <div id="diagram-section" class="flex flex-col flex-grow">
+          <div id="diagram-section" class="flex flex-col flex-grow relative">
             <div
               id="mermaidChart"
               class="border border-gray-300 rounded-md p-4 bg-white flex-grow overflow-auto"
+            ></div>
+            <div
+              id="mermaidError"
+              class="absolute bottom-0 left-0 right-0 bg-gray-200 bg-opacity-50 p-4 hidden text-red-600"
             ></div>
           </div>
         </div>

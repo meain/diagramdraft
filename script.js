@@ -1,6 +1,7 @@
 let editor;
 let currentTheme = "default";
 let currentLook = "handDrawn";
+let lastSuccessfulCode = "";
 
 function encodeState() {
     const state = {
@@ -60,9 +61,10 @@ require(["vs/editor/editor.main"], async function () {
         }
     }
 
-    const initialCode = initialState
-        ? initialState.code
-        : `graph TD
+    const initialCode =
+        initialState && initialState.code
+            ? initialState.code
+            : `graph TD
     A[Start] -->|Decide to make a Mermaid chart| B(Stare at blank screen)
     B --> C{What now?}
     C -->|Panic| D[Google 'How to Mermaid']
@@ -223,10 +225,6 @@ function exportChart() {
 
 function renderChart() {
     const input = editor.getValue();
-    const output = document.getElementById("mermaidChart");
-
-    // Clear previous chart
-    output.innerHTML = "";
 
     // Initialize mermaid with the current theme and look
     mermaid.initialize({
@@ -239,48 +237,62 @@ function renderChart() {
         },
     });
 
+    const errorDiv = document.getElementById("mermaidError");
+
     // Render new chart
     mermaid
         .render("mermaid-diagram", input)
         .then((result) => {
-            output.innerHTML = result.svg;
-
-            // Ensure the SVG fills its container without max-width
-            const svg = output.querySelector("svg");
-            svg.setAttribute("width", "100%");
-            svg.setAttribute("height", "100%");
-            svg.style.maxWidth = "none";
-
-            // Initialize pan and zoom after the SVG is rendered
-            const panZoom = svgPanZoom("#mermaid-diagram", {
-                zoomEnabled: true,
-                controlIconsEnabled: false,
-                fit: true,
-                center: true,
-                minZoom: 0.1,
-                maxZoom: 10,
-                zoomScaleSensitivity: 0.3, // Decreased from default 0.1 to make zoom faster
-            });
-
-            // Function to update pan and zoom when window is resized
-            function updatePanZoom() {
-                if (panZoom) {
-                    panZoom.resize();
-                    panZoom.fit();
-                    panZoom.center();
-                }
-            }
-
-            // Add event listener for window resize
-            window.addEventListener("resize", updatePanZoom);
-
-            // Initial update
-            updatePanZoom();
+            dispalyRenderedChart(result.svg);
+            lastSuccessfulCode = input;
+            errorDiv.style.display = "none";
         })
         .catch((error) => {
-            output.innerHTML =
-                '<p style="color: red;">Error rendering chart: ' +
-                error.message +
-                "</p>";
+            // Render the last successful one
+            mermaid
+                .render("mermaid-diagram", lastSuccessfulCode)
+                .then((result) => {
+                    dispalyRenderedChart(result.svg);
+                });
+
+            errorDiv.innerText = error.message;
+            errorDiv.style.display = "block";
         });
+}
+
+function dispalyRenderedChart(svgdata) {
+    const output = document.getElementById("mermaidChart");
+    output.innerHTML = svgdata;
+
+    // Ensure the SVG fills its container without max-width
+    const svg = output.querySelector("svg");
+    svg.setAttribute("width", "100%");
+    svg.setAttribute("height", "100%");
+    svg.style.maxWidth = "none";
+
+    // Initialize pan and zoom after the SVG is rendered
+    const panZoom = svgPanZoom("#mermaid-diagram", {
+        zoomEnabled: true,
+        controlIconsEnabled: false,
+        fit: true,
+        center: true,
+        minZoom: 0.1,
+        maxZoom: 10,
+        zoomScaleSensitivity: 0.3, // Decreased from default 0.1 to make zoom faster
+    });
+
+    // Function to update pan and zoom when window is resized
+    function updatePanZoom() {
+        if (panZoom) {
+            panZoom.resize();
+            panZoom.fit();
+            panZoom.center();
+        }
+    }
+
+    // Add event listener for window resize
+    window.addEventListener("resize", updatePanZoom);
+
+    // Initial update
+    updatePanZoom();
 }
